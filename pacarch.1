@@ -1,0 +1,41 @@
+.\" Manpage for pacarch
+.\" Contact to matiaslina@gmail.com to correct errors or typoos
+.TH man 1 "03 Sep 2014" "1.0" "pacman man page"
+.SH NAME
+pacman \- Use pacarch (from arch linux) on Debian-based systems.
+.SH SYNOPSIS
+pacarch OPTIONS [pkgs]
+.SH DESCRIPTION
+This is a bash script that lets you use pacman from archlinux into
+Debian-based systems. Although it's not a replacement for aptitude
+or apt-get.
+.SH OPTIONS
+.IP "-Syu"
+
+Run an upgrade for the system.
+
+.IP "-Sy"
+
+Run an update for the system
+
+.IP "-Ss [query]"
+
+Searchs for the query on the repositories
+
+.IP "-S [pkg1] [pkg2] ..."
+
+Installs the packages pkg1 pk2 ...
+
+.IP "-R [pkg1] [pk2] ..."
+
+Remove the packages pkg1 pk2 ...
+
+.IP "-U /path/to/debfile.deb"
+
+Install the deb file provided by parameters
+
+.SH AUTHOR
+.B Matias Linares -
+.I  <matiaslina@gmail.com>
+
+.B Ainus Solheim

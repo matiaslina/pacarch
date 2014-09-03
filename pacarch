@@ -1,0 +1,123 @@
+#!/bin/bash
+# Author: Matias Linares <matiaslina@gmail.com>
+#         Ainus Solheim
+
+# To install packages
+EXEC=""
+# Only needed for apt-cache
+QUERY=""
+
+get_exec() {
+    if [ -f /usr/bin/apt ]
+    then
+        EXEC=/usr/bin/apt
+        QUERY=/usr/bin/apt
+    elif [ -f /usr/bin/apt-get ]
+    then
+        EXEC=/usr/bin/apt-get
+        QUERY=/usr/bin/apt-cache
+    elif [ -f /usr/bin/aptitude ]
+    then
+        EXEC=/usr/bin/aptitude
+        QUERY=/usr/bin/aptitude
+    else
+        echo "Not a debian-based distro. Sorry :("
+        exit 1
+    fi
+}
+
+check_root() {
+    if [ ! $UID = 0 ]
+    then
+        echo "You need to be root to perform this command"
+        exit 1
+    fi
+}
+
+update (){
+	$EXEC update
+	$EXEC upgrade
+}
+
+install() {
+	$EXEC install $1
+}
+
+install_local() {
+    # We always have dpkg :P
+    dpkg -i $1
+}
+
+search() {
+	$QUERY search $1
+}
+
+sync() {
+	$EXEC update
+}
+
+remove() {
+	$EXEC remove $1
+}
+
+help() {
+    cat <<EOL
+Script Bash Pacman Based 1.0
+Author: Matias Linares ; Ainus Solheim
+
+How to use:
+    pacman [Option] filename
+
+Example:
+    pacman -S filename
+
+Options:
+
+--help/-h  -  Show this text
+-Sy     -  Syncronize Repositories
+-Syu    -  Syncronize Repositories and Upgrade packages
+-Ss     -  Search a Program
+-S      -  Install a Program
+-R      -  Remove a Program
+-U      -  Install a deb file
+EOL
+}
+
+get_exec
+
+case $1 in
+     -Syu)
+         check_root
+         update
+         ;;
+     -Ss)
+        shift
+        search $@
+        ;;
+     -S)
+         check_root
+         shift
+         install $@
+         ;;
+     -Sy)
+         check_root
+         sync
+         ;;
+     -R)
+         check_root
+         shift
+         remove $@
+         ;;
+    -U)
+         check_root
+         install_local $2
+         ;;
+    --help|-h)
+         help
+         ;;
+    *)
+        echo "$@ is not a valid argument"
+        echo ""  # newline
+        help
+        ;;
+esac
